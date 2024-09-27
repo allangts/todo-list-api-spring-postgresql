@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      - POSTGRES_USER=allan
+      - POSTGRES_PASSWORD=12123232
+      - POSTGRES_DB=to_do_list
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  app:
+    build: .
+    container_name: to_do_list_app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/to_do_list
+      - SPRING_DATASOURCE_USERNAME=allan
+      - SPRING_DATASOURCE_PASSWORD=12123232
+      - JWT_SECRET=XnHHOKoZ4QjmU+LheM5OrueDG7PbQ+nknLrAm+Ee2pvlTyczaJ77I6eVw2jVCTR2LKVyAEM5ytu1ylJe+J4H2A==
+    depends_on:
+      - db
+    networks:
+      - backend
+
+volumes:
+  db_data:
+
+networks:
+  backend:
